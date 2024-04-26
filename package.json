@@ -1,0 +1,23 @@
+{
+  "name": "personalbudget",
+  "version": "1.0.0",
+  "description": "establishes a budget using the evnvelope method",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joshwhite88/PersonalBudget.git"
+  },
+  "keywords": [
+    "budget",
+    "envelope"
+  ],
+  "author": "Josh White",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joshwhite88/PersonalBudget/issues"
+  },
+  "homepage": "https://github.com/joshwhite88/PersonalBudget#readme"
+}
