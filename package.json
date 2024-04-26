@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/joshwhite88/PersonalBudget/issues"
   },
-  "homepage": "https://github.com/joshwhite88/PersonalBudget#readme"
+  "homepage": "https://github.com/joshwhite88/PersonalBudget#readme",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
 }
