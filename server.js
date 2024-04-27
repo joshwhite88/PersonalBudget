@@ -17,23 +17,22 @@ app.get('/', (req, res, next) => {
     res.send('Hello World');
 });
 
-// app.param('envelopeId', (req, res, next, envelopeId) => {
-//     if (!isNaN(envelopeId)) {
-//         req.id = Number(envelopeId);
-//         next();
-//     } else {
-//         let errorMessage = new Error('id must be a number');
-//         next(errorMessage);
-//     }
-// })
+app.param('envelopeId', (req, res, next, envelopeId) => {
+    if (!isNaN(envelopeId)) {
+        req.id = Number(envelopeId);
+        next();
+    } else {
+        let errorMessage = new Error('id must be a number');
+        next(errorMessage);
+    }
+})
 
 app.get('/envelopes', (req, res, next) => {
     res.send(envelopes);
 });
 
 app.get('/envelopes/:envelopeId', (req, res, next) => {
-    let id = Number(req.params.envelopeId);
-    let foundIndex = envelopes.findIndex(envelope => envelope.envelopeId === id);
+    let foundIndex = envelopes.findIndex(envelope => envelope.envelopeId === req.id);
     if (foundIndex >= 0) {
         res.send(envelopes[foundIndex]);
     } else {
@@ -61,8 +60,7 @@ app.post('/envelopes', (req, res, next) => {
 });
 
 app.put('/envelopes/:envelopeId', (req, res, next) => {
-    let id = Number(req.params.envelopeId);
-    let foundIndex = envelopes.findIndex(envelope => envelope.envelopeId === id);
+    let foundIndex = envelopes.findIndex(envelope => envelope.envelopeId === req.id);
     envelopes[foundIndex].budget = req.body.budget;
     res.status(200).send(envelopes[foundIndex]);
 });
