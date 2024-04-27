@@ -4,6 +4,11 @@ const bodyParser = require('body-parser');
 const PORT = 3000;
 
 const envelopes = [];
+let totalBudget = 0;
+
+const adjustBudget = function(amount) {
+    totalBudget -= amount;
+};
 
 /*
 envelope object structure
@@ -44,10 +49,13 @@ app.get('/envelopes/:envelopeId', (req, res, next) => {
 });
 
 app.post('/envelopes', (req, res, next) => {
-    let found = envelopes.find(envelope => envelope.title === req.body.title);
-    if (!found) {
+    let budget = req.body.budget;
+    let title = req.body.title;
+    let exists = envelopes.find(envelope => envelope.title === envelopeTitle);
+    if (!exists) {
         let id = envelopes.length + 1;
-        envelopes.push({envelopeId: id, budget: req.body.budget, title: req.body.title});
+        envelopes.push({"envelopeId": id, "budget": budget, "title": title});
+        totalBudget -= budget;
         let envelopeIndex = envelopes.findIndex(envelope => envelope.envelopeId === id);
         res.status(201).send(envelopes[envelopeIndex]);
     } 
