@@ -4,18 +4,12 @@ const bodyParser = require('body-parser');
 const PORT = 3000;
 
 const envelopes = [];
-let totalBudget = 0;
+let totalBudget = 4350;
+let envelopeCounter = 1;
 
-const adjustBudget = function(amount) {
-    totalBudget -= amount;
-};
-
-/*
-envelope object structure
-id: number,
-budget: number,
-title: string 
-*/
+// const adjustBudget = function(amount) {
+//     totalBudget -= amount;
+// };
 
 app.use(bodyParser.json());
 
@@ -51,12 +45,12 @@ app.get('/envelopes/:envelopeId', (req, res, next) => {
 app.post('/envelopes', (req, res, next) => {
     let budget = req.body.budget;
     let title = req.body.title;
-    let exists = envelopes.find(envelope => envelope.title === envelopeTitle);
+    let exists = envelopes.find(envelope => envelope.title === title);
     if (!exists) {
-        let id = envelopes.length + 1;
-        envelopes.push({"envelopeId": id, "budget": budget, "title": title});
+        envelopes.push({"envelopeId": envelopeCounter, "budget": budget, "title": title});
+        envelopeCounter++;
         totalBudget -= budget;
-        let envelopeIndex = envelopes.findIndex(envelope => envelope.envelopeId === id);
+        let envelopeIndex = envelopes.findIndex(envelope => envelope.title === title);
         res.status(201).send(envelopes[envelopeIndex]);
     } 
     else {
@@ -64,6 +58,13 @@ app.post('/envelopes', (req, res, next) => {
         errorMessage.status = 400;
         next(errorMessage);
     }
+});
+
+app.put('/envelopes/:envelopeId', (req, res, next) => {
+    let id = Number(req.params.envelopeId);
+    let foundIndex = envelopes.findIndex(envelope => envelope.envelopeId === id);
+    envelopes[foundIndex].budget = req.body.budget;
+    res.status(200).send(envelopes[foundIndex]);
 });
 
 app.use((err, req, res, next) => {
