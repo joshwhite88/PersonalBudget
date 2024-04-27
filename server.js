@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const PORT = 3000;
 
 const envelopes = [];
-let totalBudget = 4350;
+const budgetTotal = 4350;
+let budgetAvailable = budgetTotal;
 let envelopeCounter = 1;
 
 // const adjustBudget = function(amount) {
@@ -19,7 +20,9 @@ app.get('/', (req, res, next) => {
 
 app.param('envelopeId', (req, res, next, envelopeId) => {
     if (!isNaN(envelopeId)) {
-        req.id = Number(envelopeId);
+        let id = Number(envelopeId);
+        req.id = id;
+        req.index = envelopes.findIndex(envelope => envelope.envelopeId === id);
         next();
     } else {
         let errorMessage = new Error('id must be a number');
@@ -32,9 +35,8 @@ app.get('/envelopes', (req, res, next) => {
 });
 
 app.get('/envelopes/:envelopeId', (req, res, next) => {
-    let foundIndex = envelopes.findIndex(envelope => envelope.envelopeId === req.id);
-    if (foundIndex >= 0) {
-        res.send(envelopes[foundIndex]);
+    if (req.index >= 0) {
+        res.send(envelopes[req.index]);
     } else {
         let errorMessage = new Error('envelope not found');
         next(errorMessage);
@@ -48,7 +50,7 @@ app.post('/envelopes', (req, res, next) => {
     if (!exists) {
         envelopes.push({"envelopeId": envelopeCounter, "budget": budget, "title": title});
         envelopeCounter++;
-        totalBudget -= budget;
+        budgetAvailable -= budget;
         let envelopeIndex = envelopes.findIndex(envelope => envelope.title === title);
         res.status(201).send(envelopes[envelopeIndex]);
     } 
@@ -60,9 +62,8 @@ app.post('/envelopes', (req, res, next) => {
 });
 
 app.put('/envelopes/:envelopeId', (req, res, next) => {
-    let foundIndex = envelopes.findIndex(envelope => envelope.envelopeId === req.id);
-    envelopes[foundIndex].budget = req.body.budget;
-    res.status(200).send(envelopes[foundIndex]);
+    envelopes[req.index].budget = req.body.budget;
+    res.status(200).send(envelopes[req.index]);
 });
 
 app.use((err, req, res, next) => {
