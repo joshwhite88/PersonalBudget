@@ -80,6 +80,14 @@ app.post('/envelopes', addEnvelope, (req, res, next) => {
     res.status(201).send(envelopes[envelopes.length - 1]);
 });
 
+app.post('/envelopes/transfer/:from/:to', (req, res, next) => {
+    let envelopeFrom = envelopes.find(envelope => envelope.title === req.params.from);
+    let envelopeTo = envelopes.find(envelope => envelope.title === req.params.to);
+    envelopeFrom.budget -= req.body.budget;
+    envelopeTo.budget += req.body.budget;
+    res.status(201).send([envelopeFrom, envelopeTo]);
+});
+
 app.put('/envelopes/:envelopeId', updateEnvelope, (req, res, next) => {
     res.status(200).send(envelopes[req.index]);
 });
