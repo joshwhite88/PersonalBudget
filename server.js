@@ -1,9 +1,10 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const db = require('./db');
 const PORT = 3000;
 
-const envelopes = [];
+const envelopes = db.getEnvelopes();
 let budgetAvailable = 4350;
 let envelopeCounter = 1;
 
@@ -63,7 +64,7 @@ const updateEnvelope = function(req, res, next) {
     next();
 };
 
-app.get('/envelopes', (req, res, next) => {
+app.get('/envelopes', (req, res) => {
     res.send(envelopes);
 });
 
